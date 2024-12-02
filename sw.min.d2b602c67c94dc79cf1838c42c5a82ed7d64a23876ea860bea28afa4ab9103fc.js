@@ -1,0 +1,1 @@
+navigator.serviceWorker&&navigator.serviceWorker.register("/kvm/sw.js",{scope:"/kvm/"})

@@ -1,0 +1,15 @@
+{
+  "name": "KVM虚拟化",
+  "short_name": "KVM虚拟化",
+  "start_url": "/kvm/",
+  "scope": "/kvm/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/kvm/favicon.svg",
+      "sizes": "512x512"
+    }
+  ]
+}

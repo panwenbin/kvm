@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>KVM虚拟化</title><link>https://www.panwenbin.com/kvm/</link><description>Recent content on KVM虚拟化</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 02 Dec 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://www.panwenbin.com/kvm/index.xml" rel="self" type="application/rss+xml"/><item><title>高CPU占用</title><link>https://www.panwenbin.com/kvm/high_cpu/</link><pubDate>Mon, 02 Dec 2024 00:00:00 +0800</pubDate><guid>https://www.panwenbin.com/kvm/high_cpu/</guid><description> 很奇怪的是KVM虚拟机闲置者，从虚拟机里面看cpu是闲置的。但是从主机上看qeum-kvm进程占用了100%的cpu。
+解决 # 网上查到的方案是禁用 halt_poll_ns。临时禁用的命令如下：
+echo 0 | sudo tee /sys/module/kvm/parameters/halt_poll_ns 如果要重启后依然有效，可以写入配置
+echo &amp;#34;options kvm halt_poll_ns=0&amp;#34; | sudo tee --append /etc/modprobe.d/qemu-system-x86.conf</description></item><item><title>GPU虚拟化</title><link>https://www.panwenbin.com/kvm/gpu/</link><pubDate>Tue, 23 Apr 2024 00:00:00 +0800</pubDate><guid>https://www.panwenbin.com/kvm/gpu/</guid><description>GPU虚拟化 什么东西呢
+Intel # Intel的驱动分为free和non-free两种, free的只能解码, non-free的可以解码和编码
+相关软件包 # mesa 3D加速 libva-mesa-driver(arch) mesa-vdpau(arch) mesa-va-drivers(debian) xorg-server 2D加速 gen4及以上的GPU，xf86-video-intel 更老的GPU VA-API # 浏览器好用的只有这个了 Video Acceleration API (VA-API) - 支持 Intel、AMD 和 NVIDIA（仅通过开源 Nouveau 驱动程序）。受到 Kodi、VLC、MPV、Chromium 和 Firefox 等软件的广泛支持。主要限制是缺乏专有 NVIDIA 驱动程序的任何支持。
+支持VA-API的驱动有
+intel-media-driver(arch) / intel-media-va-driver(debian) / intel-media-va-driver-non-free(debian). 适用于Intel Gen8及以上的GPU libva-intel-driver(arch). 适用于Intel Gen7及以下的GPU 更老的 libva-intel-driver-g45-h264(arch) intel-hybrid-codec-driver-git(arch) i965-va-driver(debian) i965-va-driver-shaders(debian) 就不看了 mesa-va-drivers(debian) 对Nouveau和AMD驱动 可启用VAAPI 如果是2007年以后的CPU，可以卸载server-xorg-video-intel(debian)，而使用xserver-xorg-core(debian)
+使用vainfo查看支持的编解码器
+为啥gentoo上说Mesa软件库由CPU绘制，会占用相当多的处理能力呢
+VDPAU # VDPAU - 在 AMD 和 NVIDIA（专有和 Nouveau）上完全支持。大多数桌面应用程序（例如 Kodi、VLC 和 MPV）都支持，但 Chromium 或 Firefox 根本不支持。主要限制是英特尔支持较差且不完整，并且无法与浏览器一起使用以进行网络视频加速。</description></item><item><title>qcow2磁盘</title><link>https://www.panwenbin.com/kvm/qcow2/</link><pubDate>Tue, 23 Apr 2024 00:00:00 +0800</pubDate><guid>https://www.panwenbin.com/kvm/qcow2/</guid><description>qcow2的磁盘大小是动态的，即只占用实际使用的空间，而不是预分配的空间。这样可以节省空间，但是会降低性能。
+已经占用的空间可以通过qemu-img info disk.qcow2查看。即使删除了文件，占用的空间也不会减少。
+看到的处理方式有 使用qemu-img convert转换格式，或者使用qemu-img resize调整大小。 还有一种方式是使用virt-sparsify工具，它会将磁盘中的空洞清空，然后重新分配磁盘。
+sudo apt-get install guestfs-tools sudo virt-sparsify --in-place disk.qcow2 调整大小的命令如下：
+qemu-img resize disk.qcow2 30G</description></item><item><title>virtiofs</title><link>https://www.panwenbin.com/kvm/virtiofs/</link><pubDate>Tue, 23 Apr 2024 00:00:00 +0800</pubDate><guid>https://www.panwenbin.com/kvm/virtiofs/</guid><description>使用virtiofs可以将主机的文件系统挂载到虚拟机中，这样可以实现文件共享。 对于可以共用的文件，这样可以减少磁盘占用
+mount -t virtiofs mount_tag /mnt/mount/path 可以写入/etc/fstab中
+home_shared /mnt/shared virtiofs rw,relatime 0 0 参考: https://ravada.readthedocs.io/en/latest/docs/Virtiofs.html</description></item></channel></rss>
